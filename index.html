@@ -2694,6 +2694,24 @@
     box-shadow: inset 0 3px 0 rgba(var(--green-rgb), 0.92), 0 1px 0 rgba(var(--black-rgb), 0.04);
   }
 
+  .business-index-table.has-header-groups thead .group-header-row th.group-giyeok {
+    color: var(--orange);
+    background: linear-gradient(180deg, rgba(var(--orange-rgb), 0.18), rgba(255, 255, 255, 0.98));
+    box-shadow: inset 0 3px 0 rgba(var(--orange-rgb), 0.95), 0 1px 0 rgba(var(--black-rgb), 0.04);
+  }
+
+  .business-index-table.has-header-groups thead .group-header-row th.group-nieun {
+    color: var(--blue);
+    background: linear-gradient(180deg, rgba(var(--blue-rgb), 0.16), rgba(255, 255, 255, 0.98));
+    box-shadow: inset 0 3px 0 rgba(var(--blue-rgb), 0.92), 0 1px 0 rgba(var(--black-rgb), 0.04);
+  }
+
+  .business-index-table.has-header-groups thead .group-header-row th.group-middle {
+    color: var(--purple);
+    background: linear-gradient(180deg, rgba(var(--purple-rgb), 0.16), rgba(255, 255, 255, 0.98));
+    box-shadow: inset 0 3px 0 rgba(var(--purple-rgb), 0.92), 0 1px 0 rgba(var(--black-rgb), 0.04);
+  }
+
   .business-index-table.has-header-groups thead .group-header-row th.group-spacer {
     color: transparent;
     background: linear-gradient(180deg, rgba(var(--sky-rgb), 0.08), rgba(255, 255, 255, 0.98));
@@ -4687,9 +4705,6 @@
           <div class="submenu-item" data-target="summary-demographic" onclick="activateSection('p1', 'summary-demographic', this)">
             <div class="menu-title">근속/보직여부/직군/성별/내·외국인 몰입수준</div>
           </div>
-          <div class="submenu-item" data-target="summary-all-business" onclick="activateSection('p1', 'summary-all-business', this)">
-            <div class="menu-title">전체사업부</div>
-          </div>
         </div>
       </div>
     </div>
@@ -4758,9 +4773,6 @@
             </div>
             <div class="submenu-item submenu-item-child" data-target="conclusion-barrier-support" onclick="activateSection('p3', 'conclusion-barrier-support', this)">
               <div class="menu-title">경영지원</div>
-            </div>
-            <div class="submenu-item submenu-item-child" data-target="conclusion-barrier-english" onclick="activateSection('p3', 'conclusion-barrier-english', this)">
-              <div class="menu-title">English</div>
             </div>
           </div>
         </div>
@@ -4914,20 +4926,27 @@
                 <div class="business-index-count" id="businessTypeCount"></div>
               </div>
               <div style="overflow:hidden;">
-                <table class="business-index-table" id="businessTypeCountTable">
+                <table class="business-index-table has-header-groups" id="businessTypeCountTable">
                   <thead>
-                    <tr>
+                    <tr class="group-header-row">
+                      <th colspan="3" class="group-spacer" data-nosort="true"></th>
+                      <th colspan="3" class="group-giyeok" data-nosort="true">ㄱ패턴</th>
+                      <th colspan="3" class="group-nieun" data-nosort="true">ㄴ패턴</th>
+                      <th colspan="3" class="group-middle" data-nosort="true">중도형</th>
+                      <th colspan="2" class="group-spacer" data-nosort="true"></th>
+                    </tr>
+                    <tr class="sub-header-row">
                       <th>사업부</th>
                       <th>직군</th>
                       <th class="num">총인원</th>
-                      <th class="num">안주형</th>
-                      <th class="num">중성형</th>
+                      <th class="num">충성형</th>
                       <th class="num">고몰입형</th>
-                      <th class="num">소극형</th>
-                      <th class="num">중도형</th>
                       <th class="num">전문가형</th>
+                      <th class="num">소극형</th>
                       <th class="num">저몰입형</th>
                       <th class="num">과도기형</th>
+                      <th class="num">안주형</th>
+                      <th class="num">중도형</th>
                       <th class="num">독립형</th>
                       <th class="num">ㄱ패턴</th>
                       <th class="num">ㄴ패턴</th>
@@ -5144,93 +5163,6 @@
         </div>
       </section>
 
-      <section id="summary-all-business" data-page="p1" class="report-section">
-        <div class="section-shell">
-          <div class="section-head">
-            <div class="section-title-wrap">
-              <div class="section-index" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <rect x="4" y="4" width="6" height="6" rx="1.4"/>
-                  <rect x="14" y="4" width="6" height="6" rx="1.4"/>
-                  <rect x="4" y="14" width="6" height="6" rx="1.4"/>
-                  <rect x="14" y="14" width="6" height="6" rx="1.4"/>
-                </svg>
-              </div>
-              <div>
-                <h2 class="section-title">전체사업부</h2>
-                <p class="section-desc">전 사업부를 한 화면에서 확인하는 종합 테이블 또는 종합 요약 차트용 섹션입니다. 최종 보고서의 큰 그림을 정리하기 좋은 자리로 마련했습니다.</p>
-              </div>
-            </div>
-          </div>
-          <div class="section-body">
-            <div class="business-index-table-wrap block-tone-navy">
-              <div class="business-index-table-head">
-                <div>
-                  <div class="business-index-table-title">핵심 지표 표</div>
-                  <div class="business-index-table-sub">핵심 지표를 한 표에서 빠르게 비교할 수 있도록 정리했습니다.</div>
-                </div>
-                <div class="business-index-count" id="allBusinessCount"></div>
-              </div>
-              <div class="compare-table-wrap">
-                <table class="business-index-table" id="allBusinessSummaryTable"></table>
-              </div>
-            </div>
-
-            <div class="business-index-table-wrap block-tone-sky" style="margin-top: 14px;">
-              <div class="business-index-table-head">
-                <div>
-                  <div class="business-index-table-title">세부 항목 표</div>
-                  <div class="business-index-table-sub">세부 문항 수준을 한 표에서 함께 비교합니다.</div>
-                </div>
-              </div>
-              <div class="compare-table-wrap">
-                <table class="business-index-table" id="allBusinessDetailTable"></table>
-              </div>
-            </div>
-
-            <div class="metric-block-stack" style="margin-top: 14px;">
-              <div class="business-index-table-wrap block-tone-blue">
-                <div class="business-index-table-head">
-                  <div>
-                    <div class="business-index-table-title">OI 블록</div>
-                    <div class="business-index-table-sub">조직몰입 진단 블록입니다.</div>
-                  </div>
-                </div>
-                <div class="compare-table-wrap">
-                  <table class="business-index-table" id="allBusinessOITable"></table>
-                </div>
-              </div>
-              <div class="business-index-table-wrap block-tone-green">
-                <div class="business-index-table-head">
-                  <div>
-                    <div class="business-index-table-title">LI 블록</div>
-                    <div class="business-index-table-sub">몰입지수 진단 블록입니다.</div>
-                  </div>
-                </div>
-                <div class="compare-table-wrap">
-                  <table class="business-index-table" id="allBusinessLITable"></table>
-                </div>
-              </div>
-              <div class="business-index-table-wrap block-tone-lilac">
-                <div class="business-index-table-head">
-                  <div>
-                    <div class="business-index-table-title">CI 블록</div>
-                    <div class="business-index-table-sub">업무몰입 진단 블록입니다.</div>
-                  </div>
-                </div>
-                <div class="compare-table-wrap">
-                  <table class="business-index-table" id="allBusinessCITable"></table>
-                </div>
-              </div>
-            </div>
-
-            <div class="callout" id="allBusinessInsight" style="margin-top: 14px;">
-              <strong>지표 해석 메모</strong><br>
-              상단은 핵심 지표, 아래는 세부 문항과 진단 블록을 순서대로 확인할 수 있게 구성했습니다.
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
 
     <div id="p2" class="dashboard-page">
@@ -5582,7 +5514,7 @@ const businessIndexRows = businessIndexParsed.rows;
 const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 생산직,생산간접/지원,2.전문가형,140,13.30
 생산직,생산간접/지원,3.독립형,11,1.04
-생산직,생산간접/지원,4.중성형,172,16.33
+생산직,생산간접/지원,4.충성형,172,16.33
 생산직,생산간접/지원,5.중도형,117,11.11
 생산직,생산간접/지원,6.과도기형,89,8.45
 생산직,생산간접/지원,7.안주형,41,3.89
@@ -5591,7 +5523,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 생산직,생산직접,1.고몰입형,166,15.82
 생산직,생산직접,2.전문가형,138,13.16
 생산직,생산직접,3.독립형,19,1.81
-생산직,생산직접,4.중성형,127,12.11
+생산직,생산직접,4.충성형,127,12.11
 생산직,생산직접,5.중도형,113,10.77
 생산직,생산직접,6.과도기형,92,8.77
 생산직,생산직접,7.안주형,30,2.86
@@ -5600,7 +5532,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 일반직,1. 상선사업부,1.고몰입형,132,20.66
 일반직,1. 상선사업부,2.전문가형,93,14.55
 일반직,1. 상선사업부,3.독립형,16,2.50
-일반직,1. 상선사업부,4.중성형,60,9.39
+일반직,1. 상선사업부,4.충성형,60,9.39
 일반직,1. 상선사업부,5.중도형,65,10.17
 일반직,1. 상선사업부,6.과도기형,68,10.64
 일반직,1. 상선사업부,7.안주형,20,3.13
@@ -5609,7 +5541,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 일반직,2. Energy Plant Unit,1.고몰입형,126,14.88
 일반직,2. Energy Plant Unit,2.전문가형,124,14.64
 일반직,2. Energy Plant Unit,3.독립형,27,3.19
-일반직,2. Energy Plant Unit,4.중성형,103,12.16
+일반직,2. Energy Plant Unit,4.충성형,103,12.16
 일반직,2. Energy Plant Unit,5.중도형,98,11.57
 일반직,2. Energy Plant Unit,6.과도기형,109,12.87
 일반직,2. Energy Plant Unit,7.안주형,28,3.31
@@ -5618,7 +5550,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 일반직,3. 특수선사업부,1.고몰입형,96,16.87
 일반직,3. 특수선사업부,2.전문가형,79,13.88
 일반직,3. 특수선사업부,3.독립형,16,2.81
-일반직,3. 특수선사업부,4.중성형,66,11.60
+일반직,3. 특수선사업부,4.충성형,66,11.60
 일반직,3. 특수선사업부,5.중도형,53,9.31
 일반직,3. 특수선사업부,6.과도기형,68,11.95
 일반직,3. 특수선사업부,7.안주형,23,4.04
@@ -5627,7 +5559,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 일반직,4. 제조총괄+CSHO,1.고몰입형,187,20.13
 일반직,4. 제조총괄+CSHO,2.전문가형,136,14.64
 일반직,4. 제조총괄+CSHO,3.독립형,14,1.51
-일반직,4. 제조총괄+CSHO,4.중성형,127,13.67
+일반직,4. 제조총괄+CSHO,4.충성형,127,13.67
 일반직,4. 제조총괄+CSHO,5.중도형,91,9.80
 일반직,4. 제조총괄+CSHO,6.과도기형,89,9.58
 일반직,4. 제조총괄+CSHO,7.안주형,34,3.66
@@ -5636,7 +5568,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 일반직,5. 제품전략기술원,1.고몰입형,38,19.49
 일반직,5. 제품전략기술원,2.전문가형,38,19.49
 일반직,5. 제품전략기술원,3.독립형,3,1.54
-일반직,5. 제품전략기술원,4.중성형,18,9.23
+일반직,5. 제품전략기술원,4.충성형,18,9.23
 일반직,5. 제품전략기술원,5.중도형,21,10.77
 일반직,5. 제품전략기술원,6.과도기형,23,11.79
 일반직,5. 제품전략기술원,7.안주형,8,4.10
@@ -5645,7 +5577,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 일반직,6. AX사업부,1.고몰입형,20,11.17
 일반직,6. AX사업부,2.전문가형,29,16.20
 일반직,6. AX사업부,3.독립형,3,1.68
-일반직,6. AX사업부,4.중성형,13,7.26
+일반직,6. AX사업부,4.충성형,13,7.26
 일반직,6. AX사업부,5.중도형,23,12.85
 일반직,6. AX사업부,6.과도기형,19,10.61
 일반직,6. AX사업부,7.안주형,3,1.68
@@ -5654,7 +5586,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 일반직,7. 경영지원,1.고몰입형,50,22.94
 일반직,7. 경영지원,2.전문가형,27,12.39
 일반직,7. 경영지원,3.독립형,5,2.29
-일반직,7. 경영지원,4.중성형,36,16.51
+일반직,7. 경영지원,4.충성형,36,16.51
 일반직,7. 경영지원,5.중도형,16,7.34
 일반직,7. 경영지원,6.과도기형,16,7.34
 일반직,7. 경영지원,7.안주형,9,4.13
@@ -5663,7 +5595,7 @@ const businessTypeCsv = `생산직,생산간접/지원,1.고몰입형,161,15.29
 
 const businessTypePatternCells = [
   { id: 7, label: "안주형", tone: "mix" },
-  { id: 4, label: "중성형", tone: "g" },
+  { id: 4, label: "충성형", tone: "g" },
   { id: 1, label: "고몰입형", tone: "g" },
   { id: 8, label: "소극형", tone: "l" },
   { id: 5, label: "중도형", tone: "mix" },
@@ -5805,7 +5737,7 @@ const conclusionInsight2026Csv = `직군,몰입유형,인원수,비율
 생산직,1.고몰입형,327,15.56
 생산직,2.전문가형,278,13.23
 생산직,3.독립형,30,1.43
-생산직,4.중성형,299,14.22
+생산직,4.충성형,299,14.22
 생산직,5.중도형,230,10.94
 생산직,6.과도기형,181,8.61
 생산직,7.안주형,71,3.38
@@ -5814,7 +5746,7 @@ const conclusionInsight2026Csv = `직군,몰입유형,인원수,비율
 일반직,1.고몰입형,649,18.15
 일반직,2.전문가형,526,14.71
 일반직,3.독립형,84,2.35
-일반직,4.중성형,423,11.83
+일반직,4.충성형,423,11.83
 일반직,5.중도형,367,10.26
 일반직,6.과도기형,392,10.96
 일반직,7.안주형,125,3.50
@@ -5823,7 +5755,7 @@ const conclusionInsight2026Csv = `직군,몰입유형,인원수,비율
 const conclusionInsight2025Csv = `생산직,1.고몰입형,746,22.71
 생산직,2.전문가형,355,10.81
 생산직,3.독립형,34,1.04
-생산직,4.중성형,461,14.03
+생산직,4.충성형,461,14.03
 생산직,5.중도형,428,13.03
 생산직,6.과도기형,135,4.11
 생산직,7.안주형,83,2.53
@@ -5832,7 +5764,7 @@ const conclusionInsight2025Csv = `생산직,1.고몰입형,746,22.71
 일반직,1.고몰입형,582,16.78
 일반직,2.전문가형,466,13.43
 일반직,3.독립형,69,1.99
-일반직,4.중성형,350,10.09
+일반직,4.충성형,350,10.09
 일반직,5.중도형,591,17.04
 일반직,6.과도기형,287,8.27
 일반직,7.안주형,30,0.86
@@ -6226,6 +6158,7 @@ function setupSortableTable(tableId) {
 
 function decoratePlainTableHeaders() {
   document.querySelectorAll(".business-index-table th:not(.sortable-th), .pattern-table th:not(.sortable-th)").forEach((th) => {
+    if (th.closest(".group-header-row")) return;
     const label = th.dataset.headerLabel || th.textContent.trim();
     if (!label) return;
     th.dataset.headerLabel = label;
@@ -6768,12 +6701,20 @@ function isBusinessDetailDepartmentRow(row) {
   return !isBusinessDetailTotalRow(row) && !isBusinessDetailTeamRow(row);
 }
 
+function isBusinessDetailDisplayableTeamRow(row) {
+  if (!isBusinessDetailTeamRow(row)) return true;
+  const weightColumn = getBusinessDetailWeightColumn(row);
+  const headcount = weightColumn ? toFiniteNumber(row[weightColumn]) : null;
+  if (headcount === null) return true;
+  return headcount > 5;
+}
+
 function getBusinessDetailTreeContext(sectionId, scopedRows) {
   const state = businessDetailSelectionState[sectionId];
   const childCountMap = new Map();
 
   scopedRows
-    .filter((row) => hasBusinessDetailScore(row) && isBusinessDetailTeamRow(row))
+    .filter((row) => hasBusinessDetailScore(row) && isBusinessDetailTeamRow(row) && isBusinessDetailDisplayableTeamRow(row))
     .forEach((row) => {
       const departmentKey = getBusinessDetailDepartmentKey(row);
       childCountMap.set(departmentKey, (childCountMap.get(departmentKey) || 0) + 1);
@@ -7264,6 +7205,7 @@ function getBusinessDetailFilterOptions(rows, sectionId) {
   rows
     .filter((row) => row["구분"] !== "(전체)")
     .filter((row) => hasBusinessDetailScore(row))
+    .filter((row) => !isBusinessDetailTeamRow(row) || isBusinessDetailDisplayableTeamRow(row))
     .forEach((row) => {
       const divisionLabel = normalizeBusinessLabel(row["division_name"]);
       const departmentLabel = normalizeBusinessLabel(row["구분"]);
@@ -7434,7 +7376,7 @@ function getBusinessDetailFilteredRows(sectionId) {
 
     if (!shouldExpand) return;
 
-    const teamRows = teamRowsMap.get(departmentKey) || [];
+    const teamRows = (teamRowsMap.get(departmentKey) || []).filter((row) => isBusinessDetailDisplayableTeamRow(row));
     const visibleTeams = selected.mode === "team" && departmentKey === selectedDepartmentKey
       ? teamRows.filter((row) => String(row["팀"] || "").trim() === selected.team)
       : teamRows;
@@ -9122,15 +9064,15 @@ function renderBusinessTypeCountTable(rows) {
           <td class="business-name-cell">${escapeHtml(card.business)}</td>
           <td><span class="${groupClass}">${escapeHtml(card.group)}</span></td>
           <td class="num">${escapeHtml(formatCount(totalCount))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[7].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[4].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[1].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[8].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[5].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[2].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[9].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[6].count))}</td>
-          <td class="num">${escapeHtml(formatCount(card.types[3].count))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[4]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[1]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[2]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[8]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[9]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[6]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[7]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[5]?.count || 0))}</td>
+          <td class="num">${escapeHtml(formatCount(card.types[3]?.count || 0))}</td>
           <td class="num li-cell">${escapeHtml(formatCount(patternStats.keok.count))}</td>
           <td class="num">${escapeHtml(formatCount(patternStats.nieun.count))}</td>
         </tr>
@@ -10208,13 +10150,6 @@ function applyLoginScopedVisibility(scope = "all") {
     setLoginScopeVisibility(document.getElementById(sectionId), visible);
     setLoginScopeVisibility(document.querySelector(`.sidebar-panel[data-page="p3"] .submenu-item[data-target="${sectionId}"]`), visible);
   });
-
-  const englishBarrierVisible = !restricted;
-  setLoginScopeVisibility(document.getElementById("conclusion-barrier-english"), englishBarrierVisible);
-  setLoginScopeVisibility(
-    document.querySelector('.sidebar-panel[data-page="p3"] .submenu-item[data-target="conclusion-barrier-english"]'),
-    englishBarrierVisible
-  );
 
   const barrierGroupLabel = document.querySelector('.sidebar-panel[data-page="p3"] .submenu-group-label');
   const barrierNested = document.querySelector('.sidebar-panel[data-page="p3"] .submenu-nested');
