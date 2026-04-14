@@ -5775,7 +5775,7 @@ const conclusionInsightPatternIds = {
   middle: [7, 5, 3],
   nieun: [8, 9, 6]
 };
-const conclusionInsightRadarOrder = [1, 2, 3, 6, 9, 8, 7, 4, 5];
+const conclusionInsightRadarOrder = [1, 2, 3, 6, 9, 8, 7, 5, 4];
 const conclusionInsightData = parseConclusionInsightData();
 const engagementBarrierRows = [
   {
@@ -6577,6 +6577,9 @@ function normalizeBusinessDetailDepartmentRows(sectionId, rows) {
       if (visibleRows.length <= 1 && teamLabel === departmentLabel) return false;
       return true;
     });
+    const displayableTeamRows = teamRows.filter((row) => isBusinessDetailDisplayableTeamRow(row));
+    const explicitDepartmentRows = visibleRows.filter((row) => !teamRows.includes(row));
+    const shouldDisplayDepartmentRow = explicitDepartmentRows.length > 0 || displayableTeamRows.length > 0;
 
     const aggregateSourceRows = teamRows.length ? teamRows : visibleRows;
     const departmentRow = aggregateSourceRows.length
@@ -6591,14 +6594,14 @@ function normalizeBusinessDetailDepartmentRows(sectionId, rows) {
         )
       : null;
 
-    if (!departmentRow || !hasBusinessDetailVisibleData(departmentRow)) return;
+    if (!shouldDisplayDepartmentRow || !departmentRow || !hasBusinessDetailVisibleData(departmentRow)) return;
 
     departmentRow.__rowType = "department";
     departmentRow["팀"] = departmentRow["구분"] || departmentRow["팀"] || "";
     departmentRowsByKey.set(key, departmentRow);
     teamRowsByKey.set(
       key,
-      teamRows
+      displayableTeamRows
         .filter((row) => hasBusinessDetailVisibleData(row))
         .map((row) => ({ ...row, __rowType: "team" }))
     );
@@ -6706,7 +6709,7 @@ function isBusinessDetailDisplayableTeamRow(row) {
   const weightColumn = getBusinessDetailWeightColumn(row);
   const headcount = weightColumn ? toFiniteNumber(row[weightColumn]) : null;
   if (headcount === null) return true;
-  return headcount > 5;
+  return headcount >= 5;
 }
 
 function getBusinessDetailTreeContext(sectionId, scopedRows) {
