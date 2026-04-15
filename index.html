@@ -6416,6 +6416,15 @@ function isAllBusinessAggregateRow(row) {
   return row["직군"] !== "전체" && /\(.*전체\)/.test(String(row["구분"] || ""));
 }
 
+const businessProductionAllowedDivisions = new Set(["제조총괄", "생산본부"]);
+
+function isBusinessDetailRowAllowed(sectionId, row) {
+  if (sectionId !== "biz-production") return true;
+
+  const divisionName = String(row?.["division_name"] || "").trim().replace(/^\d+\.\s*/, "");
+  return businessProductionAllowedDivisions.has(divisionName);
+}
+
 function parseBusinessUnitRows(sectionId, csvBody) {
   const headers = parseCsvLine(String(window.businessUnitDetailHeaders?.[sectionId] || window.businessUnitDetailHeader || ""))
     .map((header) => header.trim())
@@ -6432,7 +6441,8 @@ function parseBusinessUnitRows(sectionId, csvBody) {
         row[header] = (values[index] || "").trim();
         return row;
       }, {});
-    });
+    })
+    .filter((row) => isBusinessDetailRowAllowed(sectionId, row));
 
   return normalizeBusinessDetailDepartmentRows(sectionId, parsedRows);
 }
@@ -6568,7 +6578,8 @@ function normalizeBusinessDetailDepartmentRows(sectionId, rows) {
   order.forEach((key) => {
     const bucketRows = grouped.get(key) || [];
     const visibleRows = bucketRows.filter((row) => hasBusinessDetailVisibleData(row));
-    const seedRow = visibleRows[0] || bucketRows[0] || {};
+    const displayableVisibleRows = visibleRows.filter((row) => isBusinessDetailDisplayableRow(row));
+    const seedRow = displayableVisibleRows[0] || visibleRows[0] || bucketRows[0] || {};
 
     const teamRows = visibleRows.filter((row) => {
       const teamLabel = normalizeBusinessLabel(row["팀"]);
@@ -6578,26 +6589,33 @@ function normalizeBusinessDetailDepartmentRows(sectionId, rows) {
       return true;
     });
     const displayableTeamRows = teamRows.filter((row) => isBusinessDetailDisplayableTeamRow(row));
-    const explicitDepartmentRows = visibleRows.filter((row) => !teamRows.includes(row));
+    const explicitDepartmentRows = visibleRows.filter(
+      (row) => !teamRows.includes(row) && isBusinessDetailDisplayableRow(row)
+    );
     const shouldDisplayDepartmentRow = explicitDepartmentRows.length > 0 || displayableTeamRows.length > 0;
 
-    const aggregateSourceRows = teamRows.length ? teamRows : visibleRows;
+    const aggregateSourceRows = displayableTeamRows.length ? displayableTeamRows : explicitDepartmentRows;
     const departmentRow = aggregateSourceRows.length
       ? buildBusinessDetailDepartmentAggregateRow(
           {
             ...seedRow,
             division_name: seedRow["division_name"] || businessDetailSectionDisplayNameMap[sectionId] || "",
             구분: seedRow["구분"] || "",
-            팀: seedRow["구분"] || seedRow["팀"] || ""
+            팀: ""
           },
           aggregateSourceRows
         )
       : null;
 
-    if (!shouldDisplayDepartmentRow || !departmentRow || !hasBusinessDetailVisibleData(departmentRow)) return;
+    if (
+      !shouldDisplayDepartmentRow
+      || !departmentRow
+      || !hasBusinessDetailVisibleData(departmentRow)
+      || !isBusinessDetailDisplayableRow(departmentRow)
+    ) return;
 
     departmentRow.__rowType = "department";
-    departmentRow["팀"] = departmentRow["구분"] || departmentRow["팀"] || "";
+    departmentRow["팀"] = "";
     departmentRowsByKey.set(key, departmentRow);
     teamRowsByKey.set(
       key,
@@ -6704,12 +6722,17 @@ function isBusinessDetailDepartmentRow(row) {
   return !isBusinessDetailTotalRow(row) && !isBusinessDetailTeamRow(row);
 }
 
-function isBusinessDetailDisplayableTeamRow(row) {
-  if (!isBusinessDetailTeamRow(row)) return true;
+function isBusinessDetailDisplayableRow(row) {
+  if (!row || isBusinessDetailTotalRow(row)) return true;
   const weightColumn = getBusinessDetailWeightColumn(row);
   const headcount = weightColumn ? toFiniteNumber(row[weightColumn]) : null;
   if (headcount === null) return true;
   return headcount >= 5;
+}
+
+function isBusinessDetailDisplayableTeamRow(row) {
+  if (!isBusinessDetailTeamRow(row)) return isBusinessDetailDisplayableRow(row);
+  return isBusinessDetailDisplayableRow(row);
 }
 
 function getBusinessDetailTreeContext(sectionId, scopedRows) {
@@ -7208,7 +7231,7 @@ function getBusinessDetailFilterOptions(rows, sectionId) {
   rows
     .filter((row) => row["구분"] !== "(전체)")
     .filter((row) => hasBusinessDetailScore(row))
-    .filter((row) => !isBusinessDetailTeamRow(row) || isBusinessDetailDisplayableTeamRow(row))
+    .filter((row) => isBusinessDetailDisplayableRow(row))
     .forEach((row) => {
       const divisionLabel = normalizeBusinessLabel(row["division_name"]);
       const departmentLabel = normalizeBusinessLabel(row["구분"]);
@@ -7299,14 +7322,19 @@ function getBusinessDetailSearchResults(sectionId, keyword) {
 function getBusinessDetailScopedRows(sectionId) {
   const state = businessDetailSelectionState[sectionId];
   if (!state) return [];
-  if (!state.selectedDepartment) return state.rows;
+  if (!state.selectedDepartment) {
+    return state.rows.filter((row) => isBusinessDetailTotalRow(row) || isBusinessDetailDisplayableRow(row));
+  }
 
   const selected = parseBusinessDetailOptionValue(state.selectedDepartment);
-  if (selected.mode === "total") return state.rows;
+  if (selected.mode === "total") {
+    return state.rows.filter((row) => isBusinessDetailTotalRow(row) || isBusinessDetailDisplayableRow(row));
+  }
 
   return state.rows.filter((row) => {
     if (row["구분"] === "(전체)") return true;
     if (!hasBusinessDetailScore(row)) return false;
+    if (!isBusinessDetailDisplayableRow(row)) return false;
 
     const division = String(row["division_name"] || "").trim();
     const department = String(row["구분"] || "").trim();
