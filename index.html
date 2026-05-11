@@ -5889,6 +5889,10 @@ const conclusionInsightRadarOrder = [1, 2, 3, 6, 9, 8, 7, 5, 4];
 const conclusionInsightData = parseConclusionInsightData();
 const businessConclusionInsightRows = window.HANWHA_BUSINESS_CONCLUSION_INSIGHT_ROWS || [];
 const businessConclusionInsightOrder = ["상선사업부", "EPU", "특수선사업부", "제조총괄&CSHO", "제품전략기술원", "AX사업부", "경영지원"];
+
+function getLiveBusinessConclusionInsightRows() {
+  return window.HANWHA_BUSINESS_CONCLUSION_INSIGHT_ROWS || businessConclusionInsightRows || [];
+}
 const businessConclusionInsightData = parseBusinessConclusionInsightData();
 const engagementBarrierRows = [
   {
@@ -6840,7 +6844,7 @@ function isBusinessDetailDisplayableRow(row) {
   const weightColumn = getBusinessDetailWeightColumn(row);
   const headcount = weightColumn ? toFiniteNumber(row[weightColumn]) : null;
   if (headcount === null) return true;
-  return headcount >= 5;
+  return headcount !== 1;
 }
 
 function isBusinessDetailDisplayableTeamRow(row) {
@@ -8125,6 +8129,8 @@ function renderBusinessDetailSection(sectionId) {
       </div>
     </div>
 
+    ${renderBusinessDetailConclusionTypeCard(sectionId)}
+
     <div class="business-index-table-wrap block-tone-navy">
       <div class="business-index-table-head">
         <div>
@@ -8185,6 +8191,8 @@ function renderBusinessDetailSection(sectionId) {
         </div>
       </div>
     </div>
+
+    ${renderBusinessDetailConclusionTypeCard(sectionId)}
 
     <div class="callout" id="${prefix}Insight" style="margin-top: 14px;"></div>
   `;
@@ -9227,24 +9235,37 @@ function renderBusinessTypeCountTable(rows) {
   setupSortableTable("businessTypeCountTable");
 }
 
+function getBusinessTypeSummaryCards() {
+  const fallbackCardMap = new Map(
+    businessTypeCards.map((card) => [card.business, card])
+  );
+
+  return businessTypeDisplayOrder
+    .map((displayKey) => businessTypeDisplayNameMap[displayKey] || displayKey.replace(/^\d+\.\s*/, ""))
+    .map((business) => fallbackCardMap.get(business))
+    .filter(Boolean);
+}
+
 function renderBusinessTypeSection() {
   const grid = document.getElementById("businessTypeGrid");
   if (!grid) return;
 
-  grid.innerHTML = businessTypeCards.map((card) => renderBusinessTypeCard(card)).join("");
+  const summaryCards = getBusinessTypeSummaryCards();
 
-  const keokRows = businessTypeCards
+  grid.innerHTML = summaryCards.map((card) => renderBusinessTypeCard(card)).join("");
+
+  const keokRows = summaryCards
     .map((card) => ({ business: card.business, value: getBusinessTypePatternStats(card).keok.pct }))
     .sort((a, b) => b.value - a.value);
 
-  const nieunRows = businessTypeCards
+  const nieunRows = summaryCards
     .map((card) => ({ business: card.business, value: getBusinessTypePatternStats(card).nieun.pct }))
     .sort((a, b) => b.value - a.value);
 
   renderPatternMap();
   renderPatternTable("businessTypeKeokTable", keokRows);
   renderPatternTable("businessTypeNieunTable", nieunRows);
-  renderBusinessTypeCountTable(businessTypeCards);
+  renderBusinessTypeCountTable(summaryCards);
 }
 
 function parseConclusionInsightRows(csv, hasHeader = false) {
@@ -9352,11 +9373,40 @@ function summarizeBusinessConclusionPattern(snapshot2025, snapshot2026, ids, lab
   };
 }
 
+function buildConclusionInsightSnapshotFromBusinessTypeCard(card) {
+  if (!card) return { totalCount: 0, types: {} };
+
+  const types = {};
+  let totalCount = 0;
+
+  businessTypeMatrixOrder.forEach((id) => {
+    const sourceType = card.types[id];
+    if (!sourceType) return;
+
+    const count = Number(sourceType.count ?? 0) || 0;
+    const pct = Number(sourceType.pct ?? 0) || 0;
+    totalCount += count;
+    types[id] = {
+      id,
+      label: sourceType.label,
+      count,
+      pct
+    };
+  });
+
+  return { totalCount, types };
+}
+
 function buildBusinessConclusionInsightGroup(business) {
-  const rows2025 = businessConclusionInsightRows.filter((row) => row.business === business && Number(row.year) === 2025);
-  const rows2026 = businessConclusionInsightRows.filter((row) => row.business === business && Number(row.year) === 2026);
+  const summaryCardMap = new Map(
+    businessTypeCards.map((card) => [card.business, card])
+  );
+  const liveRows = getLiveBusinessConclusionInsightRows();
+  const rows2025 = liveRows.filter((row) => row.business === business && Number(row.year) === 2025);
   const year2025 = buildConclusionInsightSnapshot(rows2025);
-  const year2026 = buildConclusionInsightSnapshot(rows2026);
+  const fallbackRows2026 = liveRows.filter((row) => row.business === business && Number(row.year) === 2026);
+  const year2026FromSummary = buildConclusionInsightSnapshotFromBusinessTypeCard(summaryCardMap.get(business));
+  const year2026 = year2026FromSummary.totalCount > 0 ? year2026FromSummary : buildConclusionInsightSnapshot(fallbackRows2026);
   const hasBaseline = year2025.totalCount > 0;
   const ranking2026 = Object.values(year2026.types).sort((a, b) => b.pct - a.pct);
   const typeDeltas = {};
