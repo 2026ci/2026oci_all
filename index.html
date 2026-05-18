@@ -233,6 +233,16 @@
     margin-top: 6px;
   }
 
+  .login-password-panel {
+    display: grid;
+    gap: 14px;
+    margin-top: 6px;
+  }
+
+  .login-password-panel[hidden] {
+    display: none !important;
+  }
+
   .login-hint {
     font-size: 12px;
     line-height: 1.6;
@@ -2760,6 +2770,7 @@
     text-align: center;
   }
 
+
   .business-index-table.has-header-groups thead .group-header-row th {
     top: 0;
     z-index: 26;
@@ -4754,31 +4765,23 @@
       </div>
     </div>
     <div class="login-subtitle">
-      조회 범위를 선택한 뒤 비밀번호를 입력하면 해당 보고서 화면으로 바로 이동합니다.
+      전체 데이터를 확인하려면 아래 버튼을 누른 뒤 비밀번호를 입력해주세요.
     </div>
     <div class="login-form">
-      <div class="login-field">
-        <label class="login-label" for="loginScope">조회 범위</label>
-        <select id="loginScope" class="login-select">
-          <option value="biz-merchant">상선사업부</option>
-          <option value="biz-obu">Energy Plant Unit</option>
-          <option value="biz-special">특수선사업부</option>
-          <option value="biz-manufacturing">제조총괄+CSHO</option>
-          <option value="biz-strategy">제품전략기술원</option>
-          <option value="biz-ax">AX사업부</option>
-          <option value="biz-support">경영지원</option>
-          <option value="biz-production">생산직</option>
-        </select>
-      </div>
-      <div class="login-field">
-        <label class="login-label" for="loginPassword">비밀번호</label>
-        <div class="login-password-wrap">
-          <input id="loginPassword" class="login-password" type="password" autocomplete="off" placeholder="비밀번호를 입력해주세요">
-          <button id="loginPasswordToggle" class="login-password-toggle" type="button" aria-label="비밀번호 보기" aria-pressed="false"></button>
-        </div>
-      </div>
       <div class="login-actions">
-        <button id="loginSubmit" class="login-button" type="button">로그인</button>
+        <button id="loginAllAccessButton" class="login-button" type="button">전체데이터보기</button>
+      </div>
+      <div id="loginPasswordPanel" class="login-password-panel" hidden>
+        <div class="login-field">
+          <label class="login-label" for="loginPassword">비밀번호</label>
+          <div class="login-password-wrap">
+            <input id="loginPassword" class="login-password" type="password" autocomplete="off" placeholder="비밀번호를 입력해주세요">
+            <button id="loginPasswordToggle" class="login-password-toggle" type="button" aria-label="비밀번호 보기" aria-pressed="false"></button>
+          </div>
+        </div>
+        <div class="login-actions">
+          <button id="loginConfirmButton" class="login-button" type="button">확인</button>
+        </div>
       </div>
       <div id="loginError" class="login-error" aria-live="polite"></div>
     </div>
@@ -4813,6 +4816,9 @@
           </div>
           <div class="submenu-item" data-target="summary-demographic" onclick="activateSection('p1', 'summary-demographic', this)">
             <div class="menu-title">근속/보직여부/직군/성별/내·외국인 몰입수준</div>
+          </div>
+          <div class="submenu-item" data-target="summary-all-business" onclick="activateSection('p1', 'summary-all-business', this)">
+            <div class="menu-title">전체사업부</div>
           </div>
         </div>
       </div>
@@ -4952,7 +4958,7 @@
                     <tr>
                       <th>사업부</th>
                       <th>직군</th>
-                      <th class="num">몰입지수</th>
+                      <th class="num">몰입지수 (조직+업무)</th>
                       <th class="num">조직몰입</th>
                       <th class="num">업무몰입</th>
                     </tr>
@@ -4961,7 +4967,6 @@
                 </table>
               </div>
             </div>
-            <div class="footer-note">현재 그래프는 헤더가 포함된 `01_사업부별몰입지수_2026.csv`를 기준으로 다시 연결했습니다. 상단은 `몰입지수 / 조직몰입 / 업무몰입`, 하단은 `OI / LI / CI` 헤더를 각각 사용합니다.</div>
           </div>
         </div>
       </section>
@@ -5272,6 +5277,93 @@
         </div>
       </section>
 
+      <section id="summary-all-business" data-page="p1" class="report-section">
+        <div class="section-shell">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <div class="section-index" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="4" y="4" width="6" height="6" rx="1.4"/>
+                  <rect x="14" y="4" width="6" height="6" rx="1.4"/>
+                  <rect x="4" y="14" width="6" height="6" rx="1.4"/>
+                  <rect x="14" y="14" width="6" height="6" rx="1.4"/>
+                </svg>
+              </div>
+              <div>
+                <h2 class="section-title">전체사업부</h2>
+                <p class="section-desc">전 사업부를 한 화면에서 확인하는 종합 테이블 또는 종합 요약 차트용 섹션입니다. 최종 보고서의 큰 그림을 정리하기 좋은 자리로 마련했습니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="business-index-table-wrap block-tone-navy">
+              <div class="business-index-table-head">
+                <div>
+                  <div class="business-index-table-title">핵심 지표 표</div>
+                  <div class="business-index-table-sub">핵심 지표를 한 표에서 빠르게 비교할 수 있도록 정리했습니다.</div>
+                </div>
+                <div class="business-index-count" id="allBusinessCount"></div>
+              </div>
+              <div class="compare-table-wrap">
+                <table class="business-index-table" id="allBusinessSummaryTable"></table>
+              </div>
+            </div>
+
+            <div class="business-index-table-wrap block-tone-sky" style="margin-top: 14px;">
+              <div class="business-index-table-head">
+                <div>
+                  <div class="business-index-table-title">세부 항목 표</div>
+                  <div class="business-index-table-sub">세부 문항 수준을 한 표에서 함께 비교합니다.</div>
+                </div>
+              </div>
+              <div class="compare-table-wrap">
+                <table class="business-index-table" id="allBusinessDetailTable"></table>
+              </div>
+            </div>
+
+            <div class="metric-block-stack" style="margin-top: 14px;">
+              <div class="business-index-table-wrap block-tone-blue">
+                <div class="business-index-table-head">
+                  <div>
+                    <div class="business-index-table-title">OI 블록</div>
+                    <div class="business-index-table-sub">조직몰입 진단 블록입니다.</div>
+                  </div>
+                </div>
+                <div class="compare-table-wrap">
+                  <table class="business-index-table" id="allBusinessOITable"></table>
+                </div>
+              </div>
+              <div class="business-index-table-wrap block-tone-green">
+                <div class="business-index-table-head">
+                  <div>
+                    <div class="business-index-table-title">LI 블록</div>
+                    <div class="business-index-table-sub">몰입지수 진단 블록입니다.</div>
+                  </div>
+                </div>
+                <div class="compare-table-wrap">
+                  <table class="business-index-table" id="allBusinessLITable"></table>
+                </div>
+              </div>
+              <div class="business-index-table-wrap block-tone-lilac">
+                <div class="business-index-table-head">
+                  <div>
+                    <div class="business-index-table-title">CI 블록</div>
+                    <div class="business-index-table-sub">업무몰입 진단 블록입니다.</div>
+                  </div>
+                </div>
+                <div class="compare-table-wrap">
+                  <table class="business-index-table" id="allBusinessCITable"></table>
+                </div>
+              </div>
+            </div>
+
+            <div class="callout" id="allBusinessInsight" style="margin-top: 14px;">
+              <strong>지표 해석 메모</strong><br>
+              상단은 핵심 지표, 아래는 세부 문항과 진단 블록을 순서대로 확인할 수 있게 구성했습니다.
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <div id="p2" class="dashboard-page">
@@ -5789,7 +5881,7 @@ const businessDetailColumnGroups = {
 };
 const businessDetailColumnGroupOverrides = {
   "biz-production": {
-    summary: ["division_name", "구분", "팀", "응답인원", "응답률", "몰입지수", "조직몰입", "업무몰입", "OI", "LI", "CI"],
+    summary: ["division_name", "구분", "팀", "응답인원", "응답률", "몰입지수", "조직몰입", "업무몰입", "OI", "safety", "operation", "tech", "LI", "CI"],
     detail: ["division_name", "구분", "팀", "조직몰입", "회사자랑", "존중", "입사추천", "희생", "조직공감력", "직무유연성", "업무몰입", "활력", "아침출근", "업무를통한성장", "나에대한기대", "성과인정기대", "WAY실천노력"],
     oi: ["division_name", "구분", "팀", "OI"],
     li: ["division_name", "구분", "팀", "LI", "LI1", "LI2", "LI3", "LI4", "LI5"],
@@ -5888,11 +5980,10 @@ const conclusionInsightPatternIds = {
 const conclusionInsightRadarOrder = [1, 2, 3, 6, 9, 8, 7, 5, 4];
 const conclusionInsightData = parseConclusionInsightData();
 const businessConclusionInsightRows = window.HANWHA_BUSINESS_CONCLUSION_INSIGHT_ROWS || [];
-const businessConclusionInsightOrder = ["상선사업부", "EPU", "특수선사업부", "제조총괄&CSHO", "제품전략기술원", "AX사업부", "경영지원"];
-
 function getLiveBusinessConclusionInsightRows() {
   return window.HANWHA_BUSINESS_CONCLUSION_INSIGHT_ROWS || businessConclusionInsightRows || [];
 }
+const businessConclusionInsightOrder = ["상선사업부", "EPU", "특수선사업부", "제조총괄&CSHO", "제품전략기술원", "AX사업부", "경영지원"];
 const businessConclusionInsightData = parseBusinessConclusionInsightData();
 const engagementBarrierRows = [
   {
@@ -6695,8 +6786,7 @@ function normalizeBusinessDetailDepartmentRows(sectionId, rows) {
   order.forEach((key) => {
     const bucketRows = grouped.get(key) || [];
     const visibleRows = bucketRows.filter((row) => hasBusinessDetailVisibleData(row));
-    const displayableVisibleRows = visibleRows.filter((row) => isBusinessDetailDisplayableRow(row));
-    const seedRow = displayableVisibleRows[0] || visibleRows[0] || bucketRows[0] || {};
+    const seedRow = visibleRows[0] || bucketRows[0] || {};
 
     const teamRows = visibleRows.filter((row) => {
       const teamLabel = normalizeBusinessLabel(row["팀"]);
@@ -6705,13 +6795,8 @@ function normalizeBusinessDetailDepartmentRows(sectionId, rows) {
       if (visibleRows.length <= 1 && teamLabel === departmentLabel) return false;
       return true;
     });
-    const displayableTeamRows = teamRows.filter((row) => isBusinessDetailDisplayableTeamRow(row));
-    const explicitDepartmentRows = visibleRows.filter(
-      (row) => !teamRows.includes(row) && isBusinessDetailDisplayableRow(row)
-    );
-    const shouldDisplayDepartmentRow = explicitDepartmentRows.length > 0 || displayableTeamRows.length > 0;
 
-    const aggregateSourceRows = displayableTeamRows.length ? displayableTeamRows : explicitDepartmentRows;
+    const aggregateSourceRows = teamRows.length ? teamRows : visibleRows;
     const departmentRow = aggregateSourceRows.length
       ? buildBusinessDetailDepartmentAggregateRow(
           {
@@ -6724,19 +6809,21 @@ function normalizeBusinessDetailDepartmentRows(sectionId, rows) {
         )
       : null;
 
-    if (
-      !shouldDisplayDepartmentRow
-      || !departmentRow
-      || !hasBusinessDetailVisibleData(departmentRow)
-      || !isBusinessDetailDisplayableRow(departmentRow)
-    ) return;
+    const mergedDepartmentRow = sectionId === "biz-production" && departmentRow
+      ? mergeBusinessDetailRows(
+          departmentRow,
+          getBusinessDetailOverlayRow(sectionId, departmentRow["division_name"], departmentRow["구분"])
+        )
+      : departmentRow;
 
-    departmentRow.__rowType = "department";
-    departmentRow["팀"] = "";
-    departmentRowsByKey.set(key, departmentRow);
+    if (!mergedDepartmentRow || !hasBusinessDetailVisibleData(mergedDepartmentRow)) return;
+
+    mergedDepartmentRow.__rowType = "department";
+    mergedDepartmentRow["팀"] = "";
+    departmentRowsByKey.set(key, mergedDepartmentRow);
     teamRowsByKey.set(
       key,
-      displayableTeamRows
+      teamRows
         .filter((row) => hasBusinessDetailVisibleData(row))
         .map((row) => ({ ...row, __rowType: "team" }))
     );
@@ -6839,25 +6926,12 @@ function isBusinessDetailDepartmentRow(row) {
   return !isBusinessDetailTotalRow(row) && !isBusinessDetailTeamRow(row);
 }
 
-function isBusinessDetailDisplayableRow(row) {
-  if (!row || isBusinessDetailTotalRow(row)) return true;
-  const weightColumn = getBusinessDetailWeightColumn(row);
-  const headcount = weightColumn ? toFiniteNumber(row[weightColumn]) : null;
-  if (headcount === null) return true;
-  return headcount !== 1;
-}
-
-function isBusinessDetailDisplayableTeamRow(row) {
-  if (!isBusinessDetailTeamRow(row)) return isBusinessDetailDisplayableRow(row);
-  return isBusinessDetailDisplayableRow(row);
-}
-
 function getBusinessDetailTreeContext(sectionId, scopedRows) {
   const state = businessDetailSelectionState[sectionId];
   const childCountMap = new Map();
 
   scopedRows
-    .filter((row) => hasBusinessDetailScore(row) && isBusinessDetailTeamRow(row) && isBusinessDetailDisplayableTeamRow(row))
+    .filter((row) => hasBusinessDetailScore(row) && isBusinessDetailTeamRow(row))
     .forEach((row) => {
       const departmentKey = getBusinessDetailDepartmentKey(row);
       childCountMap.set(departmentKey, (childCountMap.get(departmentKey) || 0) + 1);
@@ -7348,7 +7422,6 @@ function getBusinessDetailFilterOptions(rows, sectionId) {
   rows
     .filter((row) => row["구분"] !== "(전체)")
     .filter((row) => hasBusinessDetailScore(row))
-    .filter((row) => isBusinessDetailDisplayableRow(row))
     .forEach((row) => {
       const divisionLabel = normalizeBusinessLabel(row["division_name"]);
       const departmentLabel = normalizeBusinessLabel(row["구분"]);
@@ -7439,19 +7512,14 @@ function getBusinessDetailSearchResults(sectionId, keyword) {
 function getBusinessDetailScopedRows(sectionId) {
   const state = businessDetailSelectionState[sectionId];
   if (!state) return [];
-  if (!state.selectedDepartment) {
-    return state.rows.filter((row) => isBusinessDetailTotalRow(row) || isBusinessDetailDisplayableRow(row));
-  }
+  if (!state.selectedDepartment) return state.rows;
 
   const selected = parseBusinessDetailOptionValue(state.selectedDepartment);
-  if (selected.mode === "total") {
-    return state.rows.filter((row) => isBusinessDetailTotalRow(row) || isBusinessDetailDisplayableRow(row));
-  }
+  if (selected.mode === "total") return state.rows;
 
   return state.rows.filter((row) => {
     if (row["구분"] === "(전체)") return true;
     if (!hasBusinessDetailScore(row)) return false;
-    if (!isBusinessDetailDisplayableRow(row)) return false;
 
     const division = String(row["division_name"] || "").trim();
     const department = String(row["구분"] || "").trim();
@@ -7524,7 +7592,7 @@ function getBusinessDetailFilteredRows(sectionId) {
 
     if (!shouldExpand) return;
 
-    const teamRows = (teamRowsMap.get(departmentKey) || []).filter((row) => isBusinessDetailDisplayableTeamRow(row));
+    const teamRows = teamRowsMap.get(departmentKey) || [];
     const visibleTeams = selected.mode === "team" && departmentKey === selectedDepartmentKey
       ? teamRows.filter((row) => String(row["팀"] || "").trim() === selected.team)
       : teamRows;
@@ -8191,8 +8259,6 @@ function renderBusinessDetailSection(sectionId) {
         </div>
       </div>
     </div>
-
-    ${renderBusinessDetailConclusionTypeCard(sectionId)}
 
     <div class="callout" id="${prefix}Insight" style="margin-top: 14px;"></div>
   `;
@@ -10571,14 +10637,7 @@ function activateSection(pageId, sectionId, el) {
 }
 
 const loginAccessMap = {
-  "biz-merchant": { password: "2026oci1", pageId: "p2", sectionId: "biz-merchant" },
-  "biz-obu": { password: "2026oci22", pageId: "p2", sectionId: "biz-obu" },
-  "biz-special": { password: "2026oci333", pageId: "p2", sectionId: "biz-special" },
-  "biz-manufacturing": { password: "2026oci4444", pageId: "p2", sectionId: "biz-manufacturing" },
-  "biz-strategy": { password: "2026oci55555", pageId: "p2", sectionId: "biz-strategy" },
-  "biz-ax": { password: "2026oci666666", pageId: "p2", sectionId: "biz-ax" },
-  "biz-support": { password: "2026oci7777777", pageId: "p2", sectionId: "biz-support" },
-  "biz-production": { password: "2026oci88888888", pageId: "p2", sectionId: "biz-production" }
+  all: { password: "2026oci", pageId: "p1", sectionId: "summary-business-index" }
 };
 
 function unlockLoginGate() {
@@ -10591,7 +10650,7 @@ function unlockLoginGate() {
 }
 
 function openLoginTarget(scope) {
-  const config = loginAccessMap[scope] || loginAccessMap["biz-merchant"];
+  const config = loginAccessMap[scope] || loginAccessMap.all;
   applyLoginScopedVisibility(scope);
   unlockLoginGate();
 
@@ -10660,12 +10719,13 @@ function bindLoginPasswordToggle(inputEl, toggleEl) {
 }
 
 function initializeLoginGate() {
-  const scopeEl = document.getElementById("loginScope");
+  const submitEl = document.getElementById("loginAllAccessButton");
+  const passwordPanelEl = document.getElementById("loginPasswordPanel");
   const passwordEl = document.getElementById("loginPassword");
   const passwordToggleEl = document.getElementById("loginPasswordToggle");
-  const submitEl = document.getElementById("loginSubmit");
+  const confirmEl = document.getElementById("loginConfirmButton");
   const errorEl = document.getElementById("loginError");
-  if (!scopeEl || !passwordEl || !passwordToggleEl || !submitEl || !errorEl) return;
+  if (!submitEl || !passwordPanelEl || !passwordEl || !passwordToggleEl || !confirmEl || !errorEl) return;
 
   bindLoginPasswordToggle(passwordEl, passwordToggleEl);
 
@@ -10674,15 +10734,8 @@ function initializeLoginGate() {
   };
 
   const attemptLogin = () => {
-    const selected = scopeEl.value;
+    const config = loginAccessMap.all;
     const password = String(passwordEl.value || "").trim();
-    const config = loginAccessMap[selected];
-
-    if (!config) {
-      errorEl.textContent = "조회 대상을 다시 선택해주세요.";
-      scopeEl.focus();
-      return;
-    }
 
     if (password !== config.password) {
       errorEl.textContent = "비밀번호가 일치하지 않습니다.";
@@ -10692,21 +10745,23 @@ function initializeLoginGate() {
     }
 
     clearError();
-    openLoginTarget(selected);
+    openLoginTarget("all");
   };
 
-  submitEl.addEventListener("click", attemptLogin);
-  scopeEl.addEventListener("change", clearError);
+  submitEl.addEventListener("click", () => {
+    clearError();
+    passwordPanelEl.hidden = false;
+    requestAnimationFrame(() => {
+      passwordEl.focus();
+    });
+  });
+  confirmEl.addEventListener("click", attemptLogin);
   passwordEl.addEventListener("input", clearError);
   passwordEl.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
       attemptLogin();
     }
-  });
-
-  requestAnimationFrame(() => {
-    scopeEl.focus();
   });
 }
 
